@@ -36,6 +36,7 @@ def calculate_hu_moments(img):
 def embed_watermark(img):
     pass
 
+#Dicom viewer
 def view_dicom(dicom):
     ds = dcmread(dicom)
     plt.imshow(ds.pixel_array, cmap='gray')

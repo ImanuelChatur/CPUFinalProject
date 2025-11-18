@@ -1,4 +1,7 @@
 import cv2
+from imwatermark import WatermarkEncoder
+from pydicom import dcmread
+import matplotlib.pyplot as plt
 
 ##Encoding
 #1. Calculate Hu moments
@@ -33,17 +36,18 @@ def calculate_hu_moments(img):
 def embed_watermark(img):
     pass
 
+def view_dicom(dicom):
+    ds = dcmread(dicom)
+    plt.imshow(ds.pixel_array, cmap='gray')
+    plt.show()
+
 
 def main():
-    print("Hello World")
     img_name = 'images/kelpy.png'
-
     img = cv2.imread(img_name)
+    #hu_moments = calculate_hu_moments(img)
 
-    #Get hu moments
-    hu_moments = calculate_hu_moments(img)
-
-    #Embed Watermark
+    view_dicom('images/0015.DCM')
 
 
 if __name__ == '__main__':

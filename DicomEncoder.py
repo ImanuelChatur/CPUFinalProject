@@ -23,6 +23,25 @@ class DicomEncoder:
         plt.imshow(self.dicom.pixel_array, cmap='gray')
         plt.show()
 
+    def print_metadata(self):
+        for elem in self.dicom:
+            tag = elem.tag
+            name = elem.keyword
+            value = elem.value
+
+            # If the value is bytes, try decoding for readability
+            if isinstance(value, bytes):
+                try:
+                    # Decode ASCII and strip null bytes
+                    value_str = value.decode('ascii').rstrip('\x00')
+                except UnicodeDecodeError:
+                    # If it’s not text, just show the raw bytes length
+                    value_str = f"<{len(value)} bytes>"
+            else:
+                value_str = value
+
+            print(f"Tag: {tag}, Name: {name}, Value: {value_str}")
+
     #1. Calculate Hu Moments
     def calculate_hu_moments(self):
         print("Calculating Hu moments")

@@ -12,21 +12,20 @@ from DicomEncoder import DicomEncoder
 
 
 def main():
-    img_name = 'images/kelpy.png'
-    img = cv2.imread(img_name)
-    #hu_moments = calculate_hu_moments(img)
-
-
     print("Initializing DICOM...")
-    dicom = DicomEncoder('images/0015.DCM')
+    dicom = DicomEncoder('images/MRBRAIN.DCM')
+
     print("Calculating Hu moments...")
     dicom.calculate_hu_moments()
 
     print("Creating hash...")
     dicom.create_hash()
 
+    print("Embedding Watermark...")
+    dicom.embed_watermark()
+
     print("Viewing image")
-    #dicom.view()
+    dicom.view()
 
 
 if __name__ == '__main__':

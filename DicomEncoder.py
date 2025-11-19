@@ -1,4 +1,5 @@
 import cv2
+from imwatermark import WatermarkEncoder
 from pydicom import dcmread
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +14,9 @@ class DicomEncoder:
         self.dicom = dcmread(self.dicom_name)
 
         #Get Pixels
-        self.pixel_array = self.dicom.pixel_array
+        self.pixels = self.dicom.pixel_array
+        self.normal_array = ((self.pixels - self.pixels.min()) / (self.pixels.max() - self.pixels.min()) * 255).astype(np.uint8)
+        self.normal_array = cv2.cvtColor(self.normal_array, cv2.COLOR_GRAY2BGR)
 
 
     def view(self):
@@ -23,18 +26,20 @@ class DicomEncoder:
     #1. Calculate Hu Moments
     def calculate_hu_moments(self):
         print("Calculating Hu moments")
-        moments = cv2.moments(self.pixel_array)
+        moments = cv2.moments(self.pixels)
         hu_moments = cv2.HuMoments(moments).flatten()
-        for moment in hu_moments:
-            print(moment)
+        for i, moment in enumerate(hu_moments):
+            print(f"Moment {i+1}: {moment}")
 
     #2. Embed Watermark
     def embed_watermark(self):
-        pass
+        encoder = WatermarkEncoder()
+        encoder.set_watermark('bytes', self.create_hash().encode('ascii'))
+        watermarked_array = encoder.encode(self.normal_array, 'dwtDct')
 
     #3. Create Hash
     def create_hash(self):
-        c_arr = np.ascontiguousarray(self.pixel_array)
+        c_arr = np.ascontiguousarray(self.normal_array)
         arr_bytes = c_arr.tobytes()
         hasher = hashlib.sha256()
         hasher.update(arr_bytes)

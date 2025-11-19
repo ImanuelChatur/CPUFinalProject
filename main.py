@@ -19,8 +19,14 @@ def main():
 
     print("Initializing DICOM...")
     dicom = DicomEncoder('images/0015.DCM')
+    print("Calculating Hu moments...")
     dicom.calculate_hu_moments()
-    dicom.view()
+
+    print("Creating hash...")
+    dicom.create_hash()
+
+    print("Viewing image")
+    #dicom.view()
 
 
 if __name__ == '__main__':

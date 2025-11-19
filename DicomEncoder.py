@@ -1,7 +1,10 @@
 import cv2
-from imwatermark import WatermarkEncoder
-from pydicom import dcmread, pixel_array
+from pydicom import dcmread
 import matplotlib.pyplot as plt
+import numpy as np
+import hashlib
+#from imwatermark import WatermarkEncoder
+
 
 class DicomEncoder:
     def __init__(self, dicom_name):
@@ -31,7 +34,12 @@ class DicomEncoder:
 
     #3. Create Hash
     def create_hash(self):
-        pass
+        c_arr = np.ascontiguousarray(self.pixel_array)
+        arr_bytes = c_arr.tobytes()
+        hasher = hashlib.sha256()
+        hasher.update(arr_bytes)
+        print(hasher.hexdigest())
+        return hasher.hexdigest()
 
     #4. Embed Hash + Hu moments
     def embed_hash(self):

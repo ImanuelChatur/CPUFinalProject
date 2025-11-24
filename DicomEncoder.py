@@ -8,22 +8,35 @@ import hashlib
 
 
 class DicomEncoder:
-    def __init__(self, dicom_name):
-        #Get Dicom file
-        self.dicom_name = dicom_name
-        self.dicom = dcmread(self.dicom_name)
-
-        #Get Pixels
-        self.pixels = self.dicom.pixel_array
-        self.normal_array = ((self.pixels - self.pixels.min()) / (self.pixels.max() - self.pixels.min()) * 255).astype(np.uint8)
-        self.normal_array = cv2.cvtColor(self.normal_array, cv2.COLOR_GRAY2BGR)
-        
-    def encode_dicom(self):
-        pass
 
 
-    def view(self):
-        plt.imshow(self.dicom.pixel_array, cmap='gray')
+    def encode_dicom(self, dicom_name):
+        print(f"Encoding Dicom file {dicom_name}")
+        dicom = dcmread(dicom_name)
+        print("Extracting Pixels")
+        pixels = dicom.pixel_array
+        normal_array = ((pixels - pixels.min()) / (pixels.max() - pixels.min()) * 255).astype(np.uint8)
+        normal_array = cv2.cvtColor(normal_array, cv2.COLOR_GRAY2BGR)
+
+        print("Calculating Hu Moments")
+        hu = self.calculate_hu_moments(pixels)
+
+        print("Creating Hash")
+        hash = self.create_hash(normal_array)
+
+        print("Watermarking Pixels")
+        watermarked_array = self.embed_watermark(normal_array, hash)
+
+        print("Embedding hash + hu moments")
+        #final_array = self.embed_hash()
+
+        self.view(watermarked_array)
+
+        #return final_array
+
+
+    def view(self, pixel_array):
+        plt.imshow(pixel_array, cmap='gray')
         plt.show()
 
     def print_metadata(self):
@@ -46,28 +59,27 @@ class DicomEncoder:
             print(f"Tag: {tag}, Name: {name}, Value: {value_str}")
 
     #1. Calculate Hu Moments
-    def calculate_hu_moments(self):
-        print("Calculating Hu moments")
-        moments = cv2.moments(self.pixels)
+    def calculate_hu_moments(self, pixels):
+        moments = cv2.moments(pixels)
         hu_moments = cv2.HuMoments(moments).flatten()
         for i, moment in enumerate(hu_moments):
             print(f"Moment {i+1}: {moment}")
+        return hu_moments
 
     #2. Embed Watermark
-    def embed_watermark(self):
+    def embed_watermark(self, normal_array, embedded):
         encoder = WatermarkEncoder()
-        encoder.set_watermark('bytes', self.create_hash().encode('ascii'))
-        watermarked_array = encoder.encode(self.normal_array, 'dwtDct')
+        encoder.set_watermark('bytes', embedded.encode('ascii'))
+        return encoder.encode(normal_array, 'dwtDct')
 
     #3. Create Hash
-    def create_hash(self):
-        c_arr = np.ascontiguousarray(self.normal_array)
+    def create_hash(self, normal_array):
+        c_arr = np.ascontiguousarray(normal_array)
         arr_bytes = c_arr.tobytes()
         hasher = hashlib.sha256()
         hasher.update(arr_bytes)
-        print(hasher.hexdigest())
         return hasher.hexdigest()
 
     #4. Embed Hash + Hu moments
     def embed_hash(self):
-        pass
+        return 0

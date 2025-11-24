@@ -13,21 +13,8 @@ from DicomEncoder import DicomEncoder
 
 def main():
     print("Initializing DICOM...")
-    dicom = DicomEncoder('images/MRBRAIN.DCM')
-
-    print("Calculating Hu moments...")
-    dicom.calculate_hu_moments()
-
-    print("Creating hash...")
-    dicom.create_hash()
-
-    print("Embedding Watermark...")
-    dicom.embed_watermark()
-
-    print("Metadata printing...")
-    dicom.print_metadata()
-    print("Viewing image")
-    dicom.view()
+    encoder = DicomEncoder()
+    encoder.encode_dicom('images/MRBRAIN.DCM')
 
 
 if __name__ == '__main__':

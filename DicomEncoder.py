@@ -8,9 +8,15 @@ import hashlib
 
 
 class DicomEncoder:
-
-
+    """
+    Utility class for Encoding a Dicom File with various features to ensure image integrity
+    """
     def encode_dicom(self, dicom_name):
+        """
+        Encode dicom image
+        :param dicom_name: Location of the DICOM file
+        :return: Final pixel array of the encoded DICOM
+        """
         print(f"Encoding Dicom file {dicom_name}")
         dicom = dcmread(dicom_name)
         print("Extracting Pixels")

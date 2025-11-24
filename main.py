@@ -22,12 +22,12 @@ def main():
     dicom.create_hash()
 
     print("Embedding Watermark...")
-    #dicom.embed_watermark()
+    dicom.embed_watermark()
 
     print("Metadata printing...")
     dicom.print_metadata()
     print("Viewing image")
-    #dicom.view()
+    dicom.view()
 
 
 if __name__ == '__main__':

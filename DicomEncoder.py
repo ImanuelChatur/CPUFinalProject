@@ -17,6 +17,9 @@ class DicomEncoder:
         self.pixels = self.dicom.pixel_array
         self.normal_array = ((self.pixels - self.pixels.min()) / (self.pixels.max() - self.pixels.min()) * 255).astype(np.uint8)
         self.normal_array = cv2.cvtColor(self.normal_array, cv2.COLOR_GRAY2BGR)
+        
+    def encode_dicom(self):
+        pass
 
 
     def view(self):

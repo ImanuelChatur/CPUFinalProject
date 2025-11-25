@@ -6,6 +6,7 @@ from imwatermark import WatermarkEncoder
 class DicomEncoder:
     """
     Utility class for Encoding a Dicom File with various features to ensure image integrity
+    - Many cool features!
     """
     @staticmethod
     def encode_dicom(dicom):
@@ -67,6 +68,11 @@ class DicomEncoder:
     #3. Create Hash
     @staticmethod
     def create_hash(normal_array):
+        """
+        Takes the normalized array, turns into SHA-256 Hash
+        :param normal_array: Normalized array
+        :return: SHA-256 Hash
+        """
         c_arr = np.ascontiguousarray(normal_array)
         arr_bytes = c_arr.tobytes()
         hasher = hashlib.sha256()

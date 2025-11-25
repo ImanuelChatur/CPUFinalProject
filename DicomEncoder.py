@@ -2,6 +2,8 @@ import hashlib
 import cv2
 import numpy as np
 from imwatermark import WatermarkEncoder
+from numpy.random import normal
+from pydicom import dcmwrite
 
 class DicomEncoder:
     """
@@ -40,8 +42,18 @@ class DicomEncoder:
         #return final_array
     @staticmethod
     def save_dicom_as(dicom, watermarkedData):
-        dicom.get_dicom().save_as('watermarked.dcm')
-        pass
+        dicomFile = dicom.get_dicom()
+        pixels = dicom.get_pixels()
+        #Un-normalize pixel data
+        normalWatermarked = (watermarkedData / 255 * (pixels.max() - pixels.min()) + pixels.min()).astype(pixels.dtype)
+
+        if normalWatermarked.ndim == 3:
+            normalWatermarked = normalWatermarked[:, :, 0]
+
+        dicomFile.PixelData = normalWatermarked.tobytes()
+
+
+        dicomFile.save_as('watermarked.dcm')
 
 
     #1. Calculate Hu Moments

@@ -8,10 +8,14 @@ from Dicom import Dicom
 
 
 def main():
+    encoder = DicomEncoder()
+
+
     print("Initializing DICOM...")
     brain = Dicom('images/MRBRAIN.DCM')
-    encoder = DicomEncoder()
-    #encoder.encode_dicom(brain)
+    test = Dicom('images/0015.DCM')
+    encoder.encode_dicom(test)
+    test.view()
 
     new = Dicom('watermarked.dcm')
     print(new.get_pixels())

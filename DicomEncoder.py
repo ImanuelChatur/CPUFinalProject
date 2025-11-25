@@ -24,10 +24,13 @@ class DicomEncoder:
         hu = DicomEncoder.calculate_hu_moments(pixels)
 
         print("Creating Hash")
-        hash = DicomEncoder.create_hash(normal_array)
+        h = DicomEncoder.create_hash(normal_array)
 
         print("Watermarking Pixels")
-        watermarked_array = DicomEncoder.embed_watermark(normal_array, hash)
+        watermarked_array = DicomEncoder.embed_watermark(normal_array, h)
+
+        print("Saving as...")
+        DicomEncoder.save_dicom_as(dicom, watermarked_array)
 
         print("Embedding hash + hu moments")
         #final_array = self.embed_hash()
@@ -35,6 +38,11 @@ class DicomEncoder:
         #view(watermarked_array)
 
         #return final_array
+    @staticmethod
+    def save_dicom_as(dicom, watermarkedData):
+        dicom.get_dicom().save_as('watermarked.dcm')
+        pass
+
 
     #1. Calculate Hu Moments
     @staticmethod

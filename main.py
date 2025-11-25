@@ -11,7 +11,11 @@ def main():
     print("Initializing DICOM...")
     brain = Dicom('images/MRBRAIN.DCM')
     encoder = DicomEncoder()
-    encoder.encode_dicom(brain)
+    #encoder.encode_dicom(brain)
+
+    new = Dicom('watermarked.dcm')
+    print(new.get_pixels())
+    new.view()
 
 
 if __name__ == '__main__':

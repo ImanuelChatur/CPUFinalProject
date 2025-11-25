@@ -25,10 +25,14 @@ class Dicom:
         return self.normal_array
 
     def view(self):
-        plt.imshow(self.pixel_array, cmap='gray')
+        plt.imshow(self.pixels, cmap='gray')
         plt.show()
 
     def print_metadata(self):
+        """
+        Print the tags in the DICOM images
+        :return:
+        """
         for elem in self.dicom:
             tag = elem.tag
             name = elem.keyword

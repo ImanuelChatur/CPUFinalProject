@@ -22,14 +22,14 @@ class DicomEncoder:
         pixels = dicom.get_pixels()
         normal_array = dicom.get_normal_array()
 
-        print("Calculating Hu Moments")
-        hu = DicomEncoder.calculate_hu_moments(pixels)
+       # print("Calculating Hu Moments")
+       # hu = DicomEncoder.calculate_hu_moments(pixels)
 
         print("Creating Hash")
-        h = DicomEncoder.create_hash(normal_array)
+        h = DicomEncoder.create_hash(pixels) #forced to use normal
 
         print("Watermarking Pixels")
-        watermarked_array = DicomEncoder.embed_watermark(normal_array, h)
+        watermarked_array = DicomEncoder.embed_watermark(normal_array, h) #forced to use normal
 
         print("Saving as...")
         DicomEncoder.save_dicom_as(dicom, watermarked_array)
@@ -42,6 +42,13 @@ class DicomEncoder:
         #return final_array
     @staticmethod
     def save_dicom_as(dicom, watermarkedData):
+        """
+        Saves the dicom into a new files
+        Currently Destroy's the watermark as soon as it saves ! not good :(
+        :param dicom:
+        :param watermarkedData:
+        :return:
+        """
         dicomFile = dicom.get_dicom()
         pixels = dicom.get_pixels()
         #Un-normalize pixel data
@@ -51,8 +58,6 @@ class DicomEncoder:
             normalWatermarked = normalWatermarked[:, :, 0]
 
         dicomFile.PixelData = normalWatermarked.tobytes()
-
-
         dicomFile.save_as('watermarked.dcm')
 
 

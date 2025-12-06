@@ -8,9 +8,16 @@ class Dicom:
         self.dicom_name = dicom_name
         self.dicom = dcmread(dicom_name)
         self.pixels = self.dicom.pixel_array
-        self.normal_array = ((self.pixels - self.pixels.min()) / (self.pixels.max() - self.pixels.min()) * 255).astype(
-            np.uint8)
-        self.normal_array = cv2.cvtColor(self.normal_array, cv2.COLOR_GRAY2BGR)
+        self.normal_array = (((self.pixels - self.pixels.min()) / (self.pixels.max() - self.pixels.min()) * 255)
+                             .astype(np.uint8))
+        try:
+            self.normal_array = cv2.cvtColor(self.normal_array, cv2.COLOR_GRAY2BGR)
+        except Exception as e:
+            print(e)
+
+        print(f"Initializing dicom {self.dicom_name}")
+        print(f"Pixels shape: {self.pixels.shape}")
+        print(f"Normal_array shape: {self.normal_array.shape}")
 
     def get_dicom(self):
         return self.dicom
@@ -25,6 +32,8 @@ class Dicom:
         return self.normal_array
 
     def view(self):
+        print(f"{type(self.pixels)} << type of pixel!")
+        print(self.pixels.shape)
         plt.imshow(self.pixels, cmap='gray')
         plt.show()
 

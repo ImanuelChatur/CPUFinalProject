@@ -14,17 +14,21 @@ def main():
     decoder = DicomDecoder()
 
     print("Initializing DICOM...")
-    #brain = Dicom('images/MRBRAIN.DCM')
-    test = Dicom('images/0015.DCM')
+    test = Dicom('images/MRBRAIN.DCM')
 
+    test.print_metadata()
     encoder.encode_dicom(test)
 
-    test.view()
+   # test.view()
 
     new = Dicom('watermarked.dcm')
-    new.view()
+    try:
+        new.view()
+    except Exception as e:
+        print(e)
 
     decoder.decode_dicom(new)
+    print("FIN")
 
 
 if __name__ == '__main__':

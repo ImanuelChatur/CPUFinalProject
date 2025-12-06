@@ -19,8 +19,8 @@ class DicomEncoder:
         """
         print(f"Encoding Dicom file {dicom.get_name()}")
         print("Extracting Pixels")
-        pixels = dicom.get_pixels()
-        normal_array = dicom.get_normal_array()
+        pixels = dicom.get_pixels() #2 Channels (Good?)
+        normal_array = dicom.get_normal_array() # 3 Channels (bad)
 
        # print("Calculating Hu Moments")
        # hu = DicomEncoder.calculate_hu_moments(pixels)
@@ -53,9 +53,11 @@ class DicomEncoder:
         pixels = dicom.get_pixels()
         #Un-normalize pixel data
         normalWatermarked = (watermarkedData / 255 * (pixels.max() - pixels.min()) + pixels.min()).astype(pixels.dtype)
+        print(f"Normal watermarked shape! {normalWatermarked.shape}")
+        #Destroy all errors literally
+        #if normalWatermarked.ndim == 3:
+            #normalWatermarked = normalWatermarked[:, :, 0]
 
-        if normalWatermarked.ndim == 3:
-            normalWatermarked = normalWatermarked[:, :, 0]
 
         dicomFile.PixelData = normalWatermarked.tobytes()
         dicomFile.save_as('watermarked.dcm')
@@ -88,7 +90,8 @@ class DicomEncoder:
         """
         encoder = WatermarkEncoder()
         encoder.set_watermark('bytes', embedded.encode('ascii'))
-        return encoder.encode(normal_array, 'dwtDct')
+        encoded = encoder.encode(normal_array, 'dwtDct')
+        return encoded
 
     #3. Create Hash
     @staticmethod

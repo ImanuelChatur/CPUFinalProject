@@ -15,6 +15,7 @@ class DicomDecoder:
 
     @staticmethod
     def extract_watermark(normal_array):
+        print(f"DECODING NORMAL ARRAY: {normal_array.shape}")
         decoder = WatermarkDecoder(wm_type='bytes', length=64)
         decoded = decoder.decode(normal_array, 'dwtDct')
         decoded_hash = decoded.decode('ascii')
